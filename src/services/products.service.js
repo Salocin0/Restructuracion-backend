@@ -31,19 +31,21 @@ class ProductService {
     return sort
   }
   
-  /*async getAllProducts() {
-    const products = await ProductsModel.find({});
-    return products;
-  }*/
-  
-  async getAllProducts(limit,page,query,sort) {
+  async getAllProducts(limit,page,query,sort,requestUrl) {
     let products = null;
     if(typeof query === "string"){
       products = await ProductsModel.paginate({$or: [{ status: query },{ category: query }]},{limit:limit, page:page, sort: this.validateSort(sort)});
     }else{
       products = await ProductsModel.paginate({},{limit:limit, page:page, sort: this.validateSort(sort)});
     }
-    return products;
+    const prevlink = await productService.getPrevLink(requestUrl,page,products.hasPrevPage)
+    const nextlink = await productService.getNextLink(requestUrl,page,products.hasNextPage)
+    result={
+      products:products,
+      nextlink:nextlink,
+      prevlink:prevlink,
+    }
+    return result;
   }
 
   async getProduct(id) {
@@ -53,9 +55,19 @@ class ProductService {
   }
 
   async createProduct(title, description, code, price, status, stock, category, thumbnails) {
-    this.validatePostProduct(title, description, code, price, status, stock, category, thumbnails);
-    const userCreated = await ProductsModel.create({ title, description, code, price, status, stock, category, thumbnails });
-    return userCreated;
+    const products = await productService.getAllProducts();
+    let existcode = products.docs.find((p) => p.code === code);
+    if(existcode){
+      return productcreated={
+        msg:"codigo duplicado",
+        code:400,
+        user:{}
+      }
+    }else{
+      this.validatePostProduct(title, description, code, price, status, stock, category, thumbnails);
+      const productcreated = await ProductsModel.create({ title, description, code, price, status, stock, category, thumbnails });
+      return productcreated;
+    }
   }
   
   async updateProduct(id, title, description, code, price, status, stock, category, thumbnails) {
