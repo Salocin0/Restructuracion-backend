@@ -10,7 +10,6 @@ import { routerVistaRealTimeProducts } from "./routes/realTimeProducts.vista.rou
 import {routerUsers} from "./routes/users.router.js"
 import { __dirname } from "./dirname.js";
 import { Server } from "socket.io";
-import ProductManager from "./DAO/ProductManager.js";
 import { connectMongo } from './utils/connections.js';
 import { routerVistaProducts } from "./routes/products.vista.router.js";
 import { routerVistaCart } from "./routes/cart.vista.router.js";

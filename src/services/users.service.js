@@ -1,5 +1,5 @@
-import { UserModel } from '../DAO/models/users.model.js';
-
+import { modelUsuario } from '../DAO/models/db/users.model.db.js';
+//import { modelUsuario } from '../DAO/models/mem/users.model.mem.js';
 class UserService {
   validatePostUser(firstName, lastName, email) {
     if (!firstName || !lastName || !email) {
@@ -22,30 +22,30 @@ class UserService {
     }
   }
   async getAllUsers() {
-    const users = await UserModel.find({});
+    const users = await modelUsuario.getAllUsers();
     return users;
   }
 
   async getOneUser(id) {
-    const user = await UserModel.find({_id:id});
+    const user = await modelUsuario.getOneUser(id);
     return user;
   }
 
   async createUser(firstName, lastName, email) {
     this.validatePostUser(firstName, lastName, email);
-    const userCreated = await UserModel.create({ firstName, lastName, email });
+    const userCreated = await modelUsuario.createUser( firstName, lastName, email );
     return userCreated;
   }
   
   async updateUser(id, firstName, lastName, email) {
     this.validatePostUser(id, firstName, lastName, email);
-    const userUptaded = await UserModel.updateOne({ _id: id }, { firstName, lastName, email });
+    const userUptaded = await modelUsuario.updateUser( id , firstName, lastName, email );
     return userUptaded;
   }
 
   async deleteUser(id) {
     this.validateId(id);
-    const deleted = await UserModel.deleteOne({ _id: id });
+    const deleted = await modelUsuario.deleteUser(id);
     return deleted;
   }
 }

@@ -1,6 +1,5 @@
 import express from "express";
 import { productService } from "../services/products.service.js";
-import { UserModel } from "../DAO/models/users.model.js";
 
 export const routerVistaProducts = express.Router();
 

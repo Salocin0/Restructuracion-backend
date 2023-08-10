@@ -1,6 +1,4 @@
 import express from 'express';
-import { UserModel } from '../DAO/models/users.model.js';
-import { createHash, isValidPassword } from '../utils/bcrypt.js';
 import passport from 'passport';
 
 export const loginRouter = express.Router();

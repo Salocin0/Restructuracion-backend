@@ -1,4 +1,5 @@
-import { ProductsModel } from '../DAO/models/products.model.js';
+//import { modelProduct } from '../DAO/models/mem/products.model.mem.js';
+import { modelProduct } from '../DAO/models/db/products.model.db.js';
 
 class ProductService {
   validatePostProduct(title, description, code, price, status, stock, category, thumbnails) {
@@ -33,11 +34,7 @@ class ProductService {
   
   async getAllProducts(limit,page,query,sort,requestUrl) {
     let products = null;
-    if(typeof query === "string"){
-      products = await ProductsModel.paginate({$or: [{ status: query },{ category: query }]},{limit:limit, page:page, sort: this.validateSort(sort)});
-    }else{
-      products = await ProductsModel.paginate({},{limit:limit, page:page, sort: this.validateSort(sort)});
-    }
+    products = await modelProduct.getAllProducts(productsArray, limit, page, query, sort);
     const prevlink = await productService.getPrevLink(requestUrl,page,products.hasPrevPage)
     const nextlink = await productService.getNextLink(requestUrl,page,products.hasNextPage)
     result={
@@ -50,12 +47,12 @@ class ProductService {
 
   async getProduct(id) {
     this.validateId(id);
-    const product = await ProductsModel.findById({ _id: id });
+    const product = await modelProduct.getProduct(id);
     return product;
   }
 
   async createProduct(title, description, code, price, status, stock, category, thumbnails) {
-    const products = await productService.getAllProducts();
+    const products = await modelProduct.getAllProducts();
     let existcode = products.docs.find((p) => p.code === code);
     if(existcode){
       return productcreated={
@@ -65,20 +62,20 @@ class ProductService {
       }
     }else{
       this.validatePostProduct(title, description, code, price, status, stock, category, thumbnails);
-      const productcreated = await ProductsModel.create({ title, description, code, price, status, stock, category, thumbnails });
+      const productcreated = await modelProduct.createProduct( title, description, code, price, status, stock, category, thumbnails );
       return productcreated;
     }
   }
   
   async updateProduct(id, title, description, code, price, status, stock, category, thumbnails) {
     this.validatePostProduct(id, title, description, code, price, status, stock, category, thumbnails);
-    const userUptaded = await ProductsModel.updateOne({ _id: id }, { title, description, code, price, status, stock, category, thumbnails});
+    const userUptaded = await modelProduct.updateProduct( id, title, description, code, price, status, stock, category, thumbnails);
     return userUptaded;
   }
 
   async deleteProduct(id) {
     this.validateId(id);
-    const deleted = await ProductsModel.deleteOne({ _id: id });
+    const deleted = await modelProduct.deleteProduct( id );
     return deleted;
   }
 

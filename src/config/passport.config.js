@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import passport from 'passport';
 import local from 'passport-local';
 import { createHash, isValidPassword } from '../utils/bcrypt.js';
-import { UserModel } from '../DAO/models/users.model.js';
+import { UserModel } from '../DAO/models/mongoose/users.model.js';
 import GitHubStrategy from 'passport-github2';
 const LocalStrategy = local.Strategy;
 

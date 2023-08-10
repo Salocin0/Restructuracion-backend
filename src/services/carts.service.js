@@ -1,5 +1,5 @@
-import { CartsModel } from '../DAO/models/carts.model.js';
-import { ProductsModel } from '../DAO/models/products.model.js';
+import { modelCart } from '../DAO/models/db/carts.model.db.js';
+//import { modelCart } from '../DAO/models/mem/carts.model.mem.js';
 
 class CartService {
   validateId(id) {
@@ -25,32 +25,25 @@ class CartService {
     }
   }
   
-  
   async getAllCarts() {
-    const carts = await CartsModel.find({});
+    const carts = await modelCart.getAllCarts();
     return carts;
   }
 
   async getCart(id) {
     this.validateId(id);
-    const cart = await CartsModel.findById(id).populate({
-      path: "products",
-      populate: {
-        path: "id",
-        model: ProductsModel,
-      },
-    });
+    const cart = await modelCart.getCart(id);
     return cart;
   }
 
   async createCart() {
     let product = new Array();
-    const cartCreated = await CartsModel.create({product});
+    const cartCreated = await modelCart.create(product);
     return cartCreated;
   }
 
   async updateCart(id,products) {
-    const cartCreated = await CartsModel.updateOne({ _id: id }, { products: products });
+    const cartCreated = await modelCart.updateCart(id,products);
     return cartCreated;
   }
 
@@ -66,7 +59,7 @@ class CartService {
 
   async deleteCart(id) {
     this.validateId(id);
-    const deleted = await CartsModel.deleteOne({ _id: id });
+    const deleted = await modelCart.deleteCart( id );
     return deleted;
   }
 
