@@ -1,4 +1,5 @@
 import { ProductsModel } from '../mongoose/products.model.js';
+import { CartsModel } from '../mongoose/carts.model.js';
 
 class ModelCart {
   async getAllCarts() {
@@ -8,21 +9,33 @@ class ModelCart {
 
   async getCart(id) {
     const cart = await CartsModel.findById(id).populate({
-      path: "products",
+      path: 'products',
       populate: {
-        path: "id",
+        path: 'id',
         model: ProductsModel,
       },
     });
     return cart;
   }
 
-  async createCart(product) {
-    const cartCreated = await CartsModel.create({product});
+  async createCart(productsArray, userId) {
+    const newCart = new CartsModel({
+      products: productsArray,
+      user: userId
+    });
+  
+    const cartCreated = await newCart.save();
     return cartCreated;
   }
 
-  async updateCart(id,products) {
+  async createCart(productsArray) {
+    const newCart = new CartsModel({ products: productsArray });
+    const cartCreated = await newCart.save();
+    return cartCreated;
+  }
+  
+
+  async updateCart(id, products) {
     const cartCreated = await CartsModel.updateOne({ _id: id }, { products: products });
     return cartCreated;
   }
@@ -32,7 +45,7 @@ class ModelCart {
     const productoIndex = cart.products.findIndex((prod) => prod.id._id.toString() === pid);
     if (productoIndex !== -1) {
       cart.products[productoIndex].quantity = quantity;
-      return await this.updateCart(cid,cart.products)
+      return await this.updateCart(cid, cart.products);
     }
   }
 
@@ -41,28 +54,27 @@ class ModelCart {
     return deleted;
   }
 
-  async addProductToCart(cid,pid){
-    const cart = await this.getCart(cid)
-    let existingProduct = cart.products.find(p => p.id === pid);
+  async addProductToCart(cid, pid) {
+    const cart = await this.getCart(cid);
+    let existingProduct = cart.products.find((p) => p.id === pid);
     if (existingProduct) {
       existingProduct.quantity += 1;
-    }else {
+    } else {
       let newProduct = {
         id: pid.toString(),
-        quantity: 1
+        quantity: 1,
       };
-    cart.products.push(newProduct);
+      cart.products.push(newProduct);
     }
     return await this.updateCart(cid, cart.products);
   }
 
-  async deleteProductInCart(cid,pid){
+  async deleteProductInCart(cid, pid) {
     const cart = await this.getCart(cid);
-    const newproducts = cart.products.filter(p => p.id !== pid);
-    this.updateCart(cid,newproducts);
+    const newproducts = cart.products.filter((p) => p.id !== pid);
+    this.updateCart(cid, newproducts);
     return await this.getCart(cid);
   }
-  
 }
 
 export const modelCart = new ModelCart();

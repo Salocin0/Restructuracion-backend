@@ -39,7 +39,7 @@ export function iniPassport() {
               firstName: profile._json.name || profile._json.login || 'noname',
               lastName: 'nolast',
               password: 'nopass',
-              rol:'Usuario'
+              rol: 'Usuario',
             };
             let userCreated = await UserModel.create(newUser);
             console.log('User Registration succesful');
@@ -60,10 +60,10 @@ export function iniPassport() {
   passport.use(
     'login',
     new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
-        if (!username || !password) {
-            return done(null, false);
-        }
-        try {
+      if (!username || !password) {
+        return done(null, false);
+      }
+      try {
         const user = await UserModel.findOne({ email: username });
         if (!user) {
           console.log('User Not Found with username (email) ' + username);
@@ -98,11 +98,10 @@ export function iniPassport() {
             console.log('User already exists');
             return done(null, false);
           }
-        let newuser = await UserModel.create({ firstName, lastName, age, email, password:createHash(password),rol:'user'});
-        console.log(newuser);
-        console.log('User Registration succesful');
-        return done(null, newuser);
-          
+          let newuser = await UserModel.create({ firstName, lastName, age, email, password: createHash(password), rol: 'user' });
+          console.log(newuser);
+          console.log('User Registration succesful');
+          return done(null, newuser);
         } catch (e) {
           console.log('Error in register');
           console.log(e);

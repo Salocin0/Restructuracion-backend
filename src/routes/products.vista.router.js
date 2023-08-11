@@ -1,9 +1,9 @@
-import express from "express";
-import { productService } from "../services/products.service.js";
+import express from 'express';
+import { productService } from '../services/products.service.js';
 
 export const routerVistaProducts = express.Router();
 
-routerVistaProducts.get("/", async (req, res) => {
+routerVistaProducts.get('/', async (req, res) => {
   const limit = req.query.limit || 3;
   const page = req.query.page || 1;
   const query = req.query.query;
@@ -16,22 +16,20 @@ routerVistaProducts.get("/", async (req, res) => {
   const lastName = req.session.user?.lastName;
   const email = req.session.user?.email;
   const rol = req.session.user?.rol;
-  
-  
+
   const foundUser = {
-    firstName:firstName,
-    lastName:lastName,
-    rol:rol,
-    email:email,
-  }
- 
-  
-  res.status(200).render("products", {
+    firstName: firstName,
+    lastName: lastName,
+    rol: rol,
+    email: email,
+  };
+
+  res.status(200).render('products', {
     p: allProducts.docs.map((product) => ({
       name: product.title,
       description: product.description,
       price: product.price,
-      id: product._id
+      id: product._id,
     })),
     pagingCounter: allProducts.pagingCounter,
     page: allProducts.page,
@@ -42,6 +40,6 @@ routerVistaProducts.get("/", async (req, res) => {
     nextPage: allProducts.nextPage,
     prevLink: previusLink,
     nextLink: postLink,
-    user: foundUser
+    user: foundUser,
   });
 });

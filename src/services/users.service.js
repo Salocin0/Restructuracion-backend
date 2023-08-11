@@ -33,13 +33,13 @@ class UserService {
 
   async createUser(firstName, lastName, email) {
     this.validatePostUser(firstName, lastName, email);
-    const userCreated = await modelUsuario.createUser( firstName, lastName, email );
+    const userCreated = await modelUsuario.createUser(firstName, lastName, email);
     return userCreated;
   }
-  
+
   async updateUser(id, firstName, lastName, email) {
     this.validatePostUser(id, firstName, lastName, email);
-    const userUptaded = await modelUsuario.updateUser( id , firstName, lastName, email );
+    const userUptaded = await modelUsuario.updateUser(id, firstName, lastName, email);
     return userUptaded;
   }
 

@@ -9,14 +9,12 @@ loginRouter.post('/register', passport.authenticate('register', { failureRedirec
 
 loginRouter.post('/login', passport.authenticate('login', { failureRedirect: '/error-autentificacion' }), async (req, res) => {
   const user = req.user;
-  if (user.username=="adminCoder@coder.com" && user.password=="adminCod3r123"){
-    //res.clearCookie('userId')
-    //res.cookie('userId', "admin", { maxAge: 3600000 });
+  if (user.username == 'adminCoder@coder.com' && user.password == 'adminCod3r123') {
     req.session.user = {
-      email: "adminCoder@coder.com",
-      firstName: "admin",
-      lastName: "admin",
-      rol: "admin",
+      email: 'adminCoder@coder.com',
+      firstName: 'admin',
+      lastName: 'admin',
+      rol: 'admin',
       _id: req.user._id.toString(),
     };
   }
@@ -29,20 +27,16 @@ loginRouter.post('/login', passport.authenticate('login', { failureRedirect: '/e
     _id: req.user._id.toString(),
   };
 
-
-  //res.clearCookie('userId')
-  //res.cookie('userId', user._id, { maxAge: 3600000 });    
-  
   return res.redirect('/vista/products');
 });
 
-loginRouter.get("/logout", (req, res) => {
-	req.session.destroy((err) => {
-		if (err) {
-			console.error("Error al cerrar sesión:", err);
-		}
-		res.redirect("/");
-	});
+loginRouter.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+    res.redirect('/');
+  });
 });
 
 loginRouter.use('/current', (req, res) => {

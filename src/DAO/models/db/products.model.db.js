@@ -4,9 +4,9 @@ class ModelProduct {
   async getAllProducts(limit, page, query, sort) {
     let products = null;
     if (typeof query === 'string') {
-      products = await ProductsModel.paginate({ $or: [{ status: query }, { category: query }] }, { limit: limit, page: page, sort: this.validateSort(sort) });
+      products = await ProductsModel.paginate({ $or: [{ status: query }, { category: query }] }, { limit: limit, page: page, sort: sort });
     } else {
-      products = await ProductsModel.paginate({}, { limit: limit, page: page, sort: this.validateSort(sort) });
+      products = await ProductsModel.paginate({}, { limit: limit, page: page, sort: sort });
     }
     return products;
   }

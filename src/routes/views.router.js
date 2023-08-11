@@ -1,5 +1,5 @@
 import express from 'express';
-//import { checkAdmin, checkUser } from '../middlewares/auth.js';
+import { isAmdin, isUser } from '../middlewares/auth.js';
 export const viewsRouter = express.Router();
 
 viewsRouter.get('', (req, res) => {
@@ -23,6 +23,6 @@ viewsRouter.get('/register', (req, res) => {
   res.render('register-form');
 });
 
-viewsRouter.get('/profile', /*checkUser,*/ (req, res) => {
+viewsRouter.get('/profile', isUser, (req, res) => {
   res.render('profile');
 });
