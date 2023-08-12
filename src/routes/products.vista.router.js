@@ -1,5 +1,6 @@
 import express from 'express';
 import { productService } from '../services/products.service.js';
+import { cartService } from '../services/carts.service.js';
 
 export const routerVistaProducts = express.Router();
 
@@ -16,6 +17,9 @@ routerVistaProducts.get('/', async (req, res) => {
   const lastName = req.session.user?.lastName;
   const email = req.session.user?.email;
   const rol = req.session.user?.rol;
+  console.log(req.session.user?._id.toString())
+  const cart = await cartService.createCart(req.session.user?._id.toString())
+  console.log(cart)
 
   const foundUser = {
     firstName: firstName,
@@ -25,7 +29,7 @@ routerVistaProducts.get('/', async (req, res) => {
   };
 
   res.status(200).render('products', {
-    p: allProducts.docs.map((product) => ({
+    p: allProducts.products.docs?.map((product) => ({
       name: product.title,
       description: product.description,
       price: product.price,
@@ -41,5 +45,6 @@ routerVistaProducts.get('/', async (req, res) => {
     prevLink: previusLink,
     nextLink: postLink,
     user: foundUser,
+    cartid: cart._id.toString(),
   });
 });

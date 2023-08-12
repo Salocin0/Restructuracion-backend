@@ -9,6 +9,7 @@ export const CartsModel = model(
   'carts',
   new Schema({
     products: { type: [productCart], required: true },
-    user: { type: Schema.Types.ObjectId, ref: 'users', required: false },
+    user: { type: Schema.Types.ObjectId, ref: 'users', required: true },
   })
 );
+

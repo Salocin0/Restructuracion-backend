@@ -1,4 +1,5 @@
 import express from "express";
+import { isUserOwner } from "../middlewares/auth.js";
 import { cartController } from "../controllers/carts.controller.js";
 export const routerCarts = express.Router();
 
@@ -16,4 +17,4 @@ routerCarts.get('/', cartController.getAll);
 
   routerCarts.post("/", cartController.create);
 
-  routerCarts.post("/:cid/product/:pid", cartController.addProductoToCart);
+  routerCarts.post("/:cid/product/:pid", isUserOwner, cartController.addProductoToCart);

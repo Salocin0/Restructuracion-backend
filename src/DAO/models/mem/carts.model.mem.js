@@ -10,10 +10,11 @@ class ModelCart {
     return product;
   }
 
-  async createCart(product) {
+  async createCart(product,userId) {
     cart={
         id:Math.random()*1000000,
-        products:[product]
+        products:[product],
+        user:userId
     }
     const cartCreated = carts.push(cart);
     return cartCreated;

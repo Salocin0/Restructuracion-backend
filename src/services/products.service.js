@@ -81,7 +81,7 @@ class ProductService {
 
   async getNextLink(link, page, hasNextPage) {
     if (hasNextPage == true) {
-      if (link.includes('page=')) {
+      if (link?.includes('page=')) {
         const regex = /page=(\d+)/;
         const updatedUrl = link.replace(regex, `page=${page - -1}`);
         return 'http://localhost:8080' + updatedUrl;

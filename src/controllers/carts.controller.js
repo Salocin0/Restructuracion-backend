@@ -148,7 +148,8 @@ class CartController {
 
   async create(req, res) {
     try {
-      const cartCreated = await cartService.createCart(req.user?.id);
+      const idusuario = req.user._id
+      const cartCreated = await cartService.createCart(idusuario);
       return res.status(201).json({
         status: 'success',
         msg: 'cart created',

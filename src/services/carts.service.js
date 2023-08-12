@@ -1,3 +1,4 @@
+import { model } from 'mongoose';
 import { modelCart } from '../DAO/models/db/carts.model.db.js';
 //import { modelCart } from '../DAO/models/mem/carts.model.mem.js';
 
@@ -41,8 +42,6 @@ class CartService {
     let cartCreated=null
     if(userid){
       cartCreated = await modelCart.createCart(product,userid);
-    }else{
-      cartCreated = await modelCart.createCart(product);
     }
     return cartCreated;
   }
@@ -93,6 +92,11 @@ class CartService {
     return await this.getCart(cid);
   }
   
+  async getCartbyiduser(idUser) {
+    const cart = await modelCart.getCartbyiduser(idUser);
+    return cart;
+  }
+
 }
 
 export const cartService = new CartService();

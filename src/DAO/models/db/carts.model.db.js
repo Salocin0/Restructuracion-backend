@@ -19,22 +19,16 @@ class ModelCart {
   }
 
   async createCart(productsArray, userId) {
-    const newCart = new CartsModel({
-      products: productsArray,
-      user: userId
-    });
+    let cart = await this.getCartbyiduser(userId)
+    if(!cart){
+      cart = await CartsModel.create({
+        products: productsArray,
+        user: userId,
+      });
+    }
+    return cart;
+  }  
   
-    const cartCreated = await newCart.save();
-    return cartCreated;
-  }
-
-  async createCart(productsArray) {
-    const newCart = new CartsModel({ products: productsArray });
-    const cartCreated = await newCart.save();
-    return cartCreated;
-  }
-  
-
   async updateCart(id, products) {
     const cartCreated = await CartsModel.updateOne({ _id: id }, { products: products });
     return cartCreated;
@@ -75,6 +69,13 @@ class ModelCart {
     this.updateCart(cid, newproducts);
     return await this.getCart(cid);
   }
+  
+  async getCartbyiduser(idUser) {
+    const cart = await CartsModel.findOne({ user: idUser });
+    return cart;
+  }
+  
+  
 }
 
 export const modelCart = new ModelCart();
