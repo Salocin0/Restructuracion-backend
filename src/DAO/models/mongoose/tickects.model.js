@@ -2,12 +2,13 @@ import { Schema, model } from "mongoose";
 
 const schema = new Schema({
     code: { type: String, required: true },
-    purchace_datetime: { type: Date, required: true },
+    purchase_datetime: { type: Date, required: true },
     amount: { type: Number, required: true },
-    purchaser: { type: String, required: true }
+    purchaser: { type: String, required: true },
+    products: { type: Array, required: true },
 });
 
-export const TicketsModel = model('tickets', schema);
+export const ticketsModel = model('tickets', schema);
 
 
 

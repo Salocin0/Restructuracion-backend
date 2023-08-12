@@ -18,3 +18,5 @@ routerCarts.get('/', cartController.getAll);
   routerCarts.post("/", cartController.create);
 
   routerCarts.post("/:cid/product/:pid", isUserOwner, cartController.addProductoToCart);
+
+  routerCarts.post("/:cid/purchase", isUserOwner, cartController.purchase)

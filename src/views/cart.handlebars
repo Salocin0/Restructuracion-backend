@@ -8,20 +8,54 @@
         <th>Price</th>
       </tr>
     </thead>
-    <tbody id="dinamic-product-list">
+    <tbody id='dinamic-product-list'>
       {{#if p.length}}
-      {{#each p}}
-      <tr>
-        <td>{{this.name}}</td>
-        <td>{{this.description}}</td>
-        <td>{{this.price}}</td>
-      </tr>
-      {{/each}}
+        {{#each p}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.price}}</td>
+          </tr>
+        {{/each}}
       {{else}}
-      <tr>
-        <td colspan="4">No hay productos en el carrito</td>
-      </tr>
+        <tr>
+          <td colspan='4'>No hay productos en el carrito</td>
+        </tr>
       {{/if}}
+
     </tbody>
   </table>
+  <a id='purchase-link' href='http://localhost:8080/api/carts/{{cid}}/purchase'>finalizar compra</a>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const purchaseLink = document.getElementById("purchase-link");
+
+    purchaseLink.addEventListener("click", (event) => {
+      event.preventDefault(); // Evita que el enlace siga su enlace original
+
+      const url = purchaseLink.getAttribute("href");
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Ajusta los encabezados según lo que necesites
+        },
+        // Puedes agregar un cuerpo JSON aquí si es necesario
+        // body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Aquí puedes manejar la respuesta exitosa si es necesario
+            console.log("Compra realizada con éxito");
+          } else {
+            // Aquí puedes manejar una respuesta no exitosa si es necesario
+            console.error("Error al realizar la compra");
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la solicitud:", error);
+        });
+    });
+  });
+</script>

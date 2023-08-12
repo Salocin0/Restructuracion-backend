@@ -191,6 +191,26 @@ class CartController {
       });
     }
   }
+
+  async purchase(req, res) {
+    try {
+      const cid = req.params.cid;
+      const email= req.user.email
+      const ticket = await cartService.purchaseCart(cid,email);
+      return res.status(200).json({
+        status: 'success',
+        msg: 'compra realizada',
+        data: ticket,
+      });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({
+        status: 'error',
+        msg: 'something went wrong :(',
+        data: {},
+      });
+    }
+  }
 }
 
 export const cartController = new CartController();
