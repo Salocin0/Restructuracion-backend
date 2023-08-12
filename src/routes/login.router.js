@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import { DTOsession } from '../DAO/DTO/session.dto.js';
 
 export const loginRouter = express.Router();
 
@@ -40,9 +41,10 @@ loginRouter.get('/logout', (req, res) => {
 });
 
 loginRouter.use('/current', (req, res) => {
+  const userSession = new DTOsession(req.session.user);
   return res.status(200).json({
     status: 'success',
     msg: 'datos de la session',
-    payload: req.session.user || {},
+    payload: userSession || {},
   });
 });

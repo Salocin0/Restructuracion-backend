@@ -109,50 +109,69 @@ class CartService {
 
   async purchaseCart(id, email) {
     const ticket = {
-      code: Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000,
-      purchase_datetime: new Date(),
-      amount: 0,
-      purchaser: email,
-      products: [],
-  };
+        code: Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000,
+        purchase_datetime: new Date(),
+        amount: 0,
+        purchaser: email,
+        products: [],
+    };
 
     const cart = await this.getCart(id);
 
     const updatedProducts = [];
-    const updatedProductIds = [];
 
     for (const product of cart.products) {
         const productdb = await modelProduct.getProduct(product.id._id);
 
         if (productdb.stock >= product.quantity) {
             productdb.stock -= product.quantity;
-            ticket.products.push(product);
-            ticket.amount += productdb.price * product.quantity;
-
+            await modelProduct.updateProduct(
+                productdb._id,
+                productdb.title,
+                productdb.description,
+                productdb.code,
+                productdb.price,
+                productdb.status,
+                productdb.stock,
+                productdb.category,
+                productdb.thumbnails
+            );
             updatedProducts.push(productdb);
-            updatedProductIds.push(product.id);
         } else {
             product.quantity -= productdb.stock;
             ticket.amount += productdb.price * productdb.stock;
             productdb.stock = 0;
-
-            const index = cart.products.findIndex(p => p.id === product.id);
+            console.log("producto en base de datos antes de guardar", productdb);
+            await modelProduct.updateProduct(
+                productdb._id,
+                productdb.title,
+                productdb.description,
+                productdb.code,
+                productdb.price,
+                productdb.status,
+                productdb.stock,
+                productdb.category,
+                productdb.thumbnails
+            );
+            const index = cart.products.findIndex(p => p.id._id === product.id._id);
             if (index !== -1) {
                 cart.products[index].quantity = product.quantity;
             }
         }
     }
 
-    cart.products = cart.products.filter(p => !updatedProductIds.includes(p.id));
+    cart.products = cart.products.filter(p => !updatedProducts.some(updatedProduct => updatedProduct._id.toString() === p.id._id.toString()));
 
-    for (const updatedProduct of updatedProducts) {
-        await modelProduct.updateProduct(updatedProduct);
+    if (cart.products.length === 0) {
+        await this.deleteCart(id);
+    } else {
+        await this.updateCart(id, cart.products);
     }
 
     await ticketsModel.create(ticket);
 
     // Mandar el email aquí
-    
+
     return ticket;
 }
 
