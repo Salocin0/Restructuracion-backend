@@ -32,24 +32,20 @@
     const purchaseLink = document.getElementById("purchase-link");
 
     purchaseLink.addEventListener("click", (event) => {
-      event.preventDefault(); // Evita que el enlace siga su enlace original
+      event.preventDefault();
 
       const url = purchaseLink.getAttribute("href");
 
       fetch(url, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Ajusta los encabezados según lo que necesites
+          "Content-Type": "application/json",
         },
-        // Puedes agregar un cuerpo JSON aquí si es necesario
-        // body: JSON.stringify(data),
       })
         .then((response) => {
           if (response.ok) {
-            // Aquí puedes manejar la respuesta exitosa si es necesario
             console.log("Compra realizada con éxito");
           } else {
-            // Aquí puedes manejar una respuesta no exitosa si es necesario
             console.error("Error al realizar la compra");
           }
         })

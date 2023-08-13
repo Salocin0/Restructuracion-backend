@@ -86,7 +86,6 @@ class CartService {
         cart.products.push(newProduct);
     }
 
-    // Agregar el producto actualizado a los productos del carrito
     const updatedCart = await this.updateCart(cid, cart.products);
 
     return updatedCart;
